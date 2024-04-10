@@ -1,0 +1,64 @@
+{
+  "buildings": [
+    {
+      "pic_room": "image01.jpg",
+      "room_name": "401",
+      "building_partial_id": "ERB",
+      "crowdedness": 1
+    },
+    {
+      "pic_room": "image02.jpg",
+      "room_name": "402",
+      "building_partial_id": "ERB",
+      "crowdedness": 3
+    },
+    {
+      "pic_room": "image03.jpg",
+      "room_name": "403",
+      "building_partial_id": "ERB",
+      "crowdedness": 2
+    },
+    {
+      "pic_room": "image04.jpg",
+      "room_name": "LT",
+      "building_partial_id": "ERB",
+      "crowdedness": 0
+    },
+    {
+      "pic_room": "image05.jpg",
+      "room_name": "710",
+      "building_partial_id": "MMW",
+      "crowdedness": 1
+    },
+    {
+      "pic_room": "image06.jpg",
+      "room_name": "TYW LT",
+      "building_partial_id": "SHB",
+      "crowdedness": 1
+    },
+    {
+      "pic_room": "image07.jpg",
+      "room_name": "C1",
+      "building_partial_id": "LSB",
+      "crowdedness": 1
+    },
+    {
+      "pic_room": "image08.jpg",
+      "room_name": "LT1",
+      "building_partial_id": "MMW",
+      "crowdedness": 3
+    },
+    {
+      "pic_room": "image09.jpg",
+      "room_name": "139",
+      "building_partial_id": "SC",
+      "crowdedness": 0
+    },
+    {
+      "pic_room": "image10.jpg",
+      "room_name": "L1",
+      "building_partial_id": "SC",
+      "crowdedness": 2
+    }
+  ]
+}

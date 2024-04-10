@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">CURoom</string>
+    <string name="title_activity_detail">DetailActivity</string>
+    <string name="room">RoomName</string>
+</resources>
