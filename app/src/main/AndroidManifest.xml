@@ -12,14 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="31">
-        <!--activity
+        <activity
             android:name=".DetailActivity"
             android:label="Update Building Details"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity-->
+        </activity>
         <activity android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

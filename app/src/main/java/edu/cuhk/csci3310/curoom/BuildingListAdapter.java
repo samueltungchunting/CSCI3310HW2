@@ -6,6 +6,7 @@ package edu.cuhk.csci3310.curoom;
 // Name: TUNG Chun Ting
 // SID:  1155160200
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -30,6 +31,8 @@ public class BuildingListAdapter extends Adapter<BuildingListAdapter.BuildingVie
     private final LinkedList<String> mBuildingNameList;
     private final LinkedList<String> mRoomNameList;
     private final LinkedList<Float> mCrowdednessList;
+
+    private static final int REQUEST_CODE_DETAIL = 1001;
 
     public BuildingListAdapter(Context context, LinkedList<String> imagePathList, LinkedList<String> mBuildingNameList, LinkedList<String> mRoomNameList, LinkedList<Float> mCrowdednessList) {
         mInflater = LayoutInflater.from(context);
@@ -73,7 +76,7 @@ public class BuildingListAdapter extends Adapter<BuildingListAdapter.BuildingVie
                         intent.putExtra("position", position);
 
                         // Start the activity
-                        v.getContext().startActivity(intent);
+                        ((Activity) v.getContext()).startActivityForResult(intent, REQUEST_CODE_DETAIL);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

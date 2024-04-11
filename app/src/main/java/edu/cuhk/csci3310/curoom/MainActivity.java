@@ -6,13 +6,16 @@ package edu.cuhk.csci3310.curoom;
 // Name: TUNG Chun Ting
 // SID:  1155160200
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -65,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
             SharedPreferences spData = getSharedPreferences("updateRoom", Context.MODE_PRIVATE);
 
-            int imageCount = Math.min(buildingsArray.size(), 6);
+//            int imageCount = Math.min(buildingsArray.size(), 6);
+            int imageCount = buildingsArray.size();
 
             for (int i = 0; i < imageCount; i++) {
                 JsonObject buildingObject = buildingsArray.get(i).getAsJsonObject();
@@ -78,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (spData.contains("roomName"+i)) {
                     roomName    = spData.getString("roomName" + i, "");
-                    crowdedness = spData.getFloat("crowdednedd" + i, 0.0f);
+                    crowdedness = spData.getFloat("crowdedness" + i, 0.0f);
                 }
 
                 // Log.i("onCreate: 334455", imagePath);
@@ -128,6 +132,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1001 && resultCode == Activity.RESULT_OK && data != null) {
+            // Handle the returned data from DetailActivity
+            int position             = data.getIntExtra("position", -1);
+            String updatedRoomName   = data.getStringExtra("updatedRoomName");
+            float updatedCrowdedness = data.getFloatExtra("updatedCrowdedness", 0.0f);
+
+            // Update your RecyclerView's data at the specified position with the returned data
+            if (position != -1) {
+                // Update your data lists (mRoomNameList, mCrowdednessList, etc.) at the specified position
+                mRoomNameList.set(position, updatedRoomName);
+                mCrowdednessList.set(position, updatedCrowdedness);
+                mAdapter.notifyItemChanged(position);
+            }
+        }
     }
 
 }
