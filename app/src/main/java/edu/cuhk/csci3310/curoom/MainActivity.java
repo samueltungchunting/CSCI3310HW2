@@ -3,12 +3,17 @@ package edu.cuhk.csci3310.curoom;
 // TODO:
 // Include your personal particular here
 //
+// Name: TUNG Chun Ting
+// SID:  1155160200
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
@@ -34,7 +39,10 @@ public class MainActivity extends AppCompatActivity {
 
     // Initially a list storing image path
     // TODO: replace with another data structure to store the JSON fields
-    private LinkedList<String> mImagePathList = new LinkedList<>();
+    private LinkedList<String> mImagePathList    = new LinkedList<>();
+    private LinkedList<Float> mCrowdednessList   = new LinkedList<>();
+    private LinkedList<String> mBuildingNameList = new LinkedList<>();
+    private LinkedList<String> mRoomNameList     = new LinkedList<>();
 
     private final String mRawFilePath = "android.resource://edu.cuhk.csci3310.curoom/raw/";
     private final String mAppFilePath = "/data/data/edu.cuhk.csci3310.curoom/";
@@ -55,14 +63,30 @@ public class MainActivity extends AppCompatActivity {
             JsonObject jsonObject = JsonParser.parseString(jsonData).getAsJsonObject();
             JsonArray buildingsArray = jsonObject.getAsJsonArray("buildings");
 
-            for (JsonElement element : buildingsArray) {
-                JsonObject buildingObject = element.getAsJsonObject();
-                String picRoom = buildingObject.get("pic_room").getAsString();
-                Log.i("onCreate: 1111", picRoom);
-                String fileNameWithoutExtension = picRoom.substring(0, picRoom.lastIndexOf('.'));
+            SharedPreferences spData = getSharedPreferences("updateRoom", Context.MODE_PRIVATE);
 
+            int imageCount = Math.min(buildingsArray.size(), 6);
+
+            for (int i = 0; i < imageCount; i++) {
+                JsonObject buildingObject = buildingsArray.get(i).getAsJsonObject();
+                String picRoom      = buildingObject.get("pic_room").getAsString();
+                String fileNameWithoutExtension = picRoom.substring(0, picRoom.lastIndexOf('.'));
                 String imagePath = mDrawableFilePath + fileNameWithoutExtension;
+                String buildingName = buildingObject.get("building_partial_id").getAsString();
+                String roomName     = buildingObject.get("room_name").getAsString();
+                float  crowdedness   = buildingObject.get("crowdedness").getAsFloat();
+
+                if (spData.contains("roomName"+i)) {
+                    roomName    = spData.getString("roomName" + i, "");
+                    crowdedness = spData.getFloat("crowdednedd" + i, 0.0f);
+                }
+
+                // Log.i("onCreate: 334455", imagePath);
+                // Add the image path to mImagePathList
                 mImagePathList.addLast(imagePath);
+                mBuildingNameList.addLast(buildingName);
+                mRoomNameList.addLast(roomName);
+                mCrowdednessList.addLast(crowdedness);
             }
 
             // Now mImagePathList contains the file paths for the images
@@ -72,29 +96,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-        // Initially put random data into the image list, modify to pass correct info read from JSON
-//        int num = (int) (Math.random()*6)+1;
-//        for(int i=1; i<=num; i++) {
-//            mImagePathList.addLast(mDrawableFilePath + "temp");
-//        }
-
-
         // Get a handle to the RecyclerView.
         mRecyclerView = findViewById(R.id.recyclerview);
         // Create an adapter and supply the data to be displayed,
         // initially just a list of image path
         // TODO: Update and pass more information as needed
-        mAdapter = new BuildingListAdapter(this, mImagePathList);
+        mAdapter = new BuildingListAdapter(this, mImagePathList, mBuildingNameList, mRoomNameList, mCrowdednessList);
 
         // Connect the adapter with the RecyclerView.
         mRecyclerView.setAdapter(mAdapter);
+
         // Give the RecyclerView a default layout manager.
         // TODO: Update the layout manager
         //  i.e. Set up Grid layout
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
     }
 
+    // TODO:
+    // Overriding extra callbacks, e.g. onStop(), onActivityResult(), etc.
+    // as well as other utility method for JSON file read here
     private String readJsonFile(int resourceId) throws IOException {
         Resources resources = getResources();
         InputStream inputStream = resources.openRawResource(resourceId);
@@ -109,12 +129,5 @@ public class MainActivity extends AppCompatActivity {
 
         return builder.toString();
     }
-
-    // TODO:
-    // Overriding extra callbacks, e.g. onStop(), onActivityResult(), etc.
-    // as well as other utility method for JSON file read here
-
-
-
 
 }
